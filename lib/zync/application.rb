@@ -1,3 +1,5 @@
+require 'yaml'
+
 module Zync
 
   class Application
@@ -20,6 +22,7 @@ module Zync
     def initialize!
       # TODO: really clean this up and refactor
       # What would Rails do?
+      load_settings
       load_app
       self
     end
@@ -31,6 +34,11 @@ module Zync
     def router(&block)
       return @router if !block_given?
       @router ||= Router.new(&block)
+    end
+    
+    def load_settings
+      Zync.settings = YAML.load(File.read("#{Zync.root}/config/settings.yml"))[Zync.env]
+      Zync.settings = Util.symbolize_keys(Zync.settings)
     end
     
     def load_app
