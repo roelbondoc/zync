@@ -42,8 +42,10 @@ module Zync
     end
     
     def load_app
-      load_folder "#{Zync.root}/app/controllers"
+      add_to_load_path "#{Zync.root}/lib"
       load_folder "#{Zync.root}/lib"
+      
+      load_folder "#{Zync.root}/app/controllers"
       load_folder "#{Zync.root}/config/initializers"
       load_routes
     end
@@ -60,6 +62,10 @@ module Zync
             require "#{path}/#{lib_file}"
           end
         end if File.exists?(path)
+      end
+      
+      def add_to_load_path(dir)
+        $:.unshift(dir) if File.exists?(dir)
       end
     
     # class Configuration
