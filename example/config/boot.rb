@@ -1,6 +1,5 @@
 require 'rubygems'
 
-# root = File.expand_path('../../', __FILE__)
 ZYNC_ROOT = File.expand_path('../../', __FILE__)
 
 # Set up gems listed in the Gemfile.
