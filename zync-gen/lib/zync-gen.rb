@@ -1,5 +1,6 @@
+require 'active_support/core_ext/object/blank'
+require 'active_support/core_ext/string'
+ 
 module Zync
-  module Generators
-  
-  end
+  autoload :Generators, 'zync-gen/generators'
 end

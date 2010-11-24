@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.expand_path('../..', __FILE__) + "/lib"
+
+require 'zync-gen'
+require 'zync-gen/generators/cli'
+
+Zync::Generators::Cli.start(ARGV)
