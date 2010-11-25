@@ -1,25 +1,20 @@
 module Zync
   module Util
-    class << self
-      
-      # TODO: would be better if activesupport's method was recursive
-      # Method from: http://snippets.dzone.com/posts/show/11121
-      def symbolize_keys(arg)
-        case arg
-        when Array
-          arg.map { |elem| symbolize_keys elem }
-        when Hash
-          Hash[
-            arg.map { |key, value|  
-              k = key.is_a?(String) ? key.to_sym : key
-              v = symbolize_keys value
-              [k,v]
-            }]
-        else
-          arg
-        end
-      end
-      
+    extend self
+
+    # Recursively convert all string keys to symbols
+    #
+    # @param [Hash] hash A Hash to symbolize keys
+    # @return [Hash] The hash with all keys as symbols
+    def symbolize_keys(hash)
+      return hash unless hash.kind_of?(Hash)
+      Hash[
+        hash.map { |key, value|
+          k = key.is_a?(String) ? key.to_sym : key
+          v = symbolize_keys value
+          [k,v]
+      }]
     end
   end
+
 end
