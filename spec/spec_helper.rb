@@ -14,6 +14,7 @@ ZYNC_ROOT = File.expand_path('../../', __FILE__)
 
 require 'zync'
 require 'rspec'
+require 'timecop'
 require "em-spec/rspec"
 
 # Requires supporting files with custom matchers and macros, etc,

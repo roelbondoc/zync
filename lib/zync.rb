@@ -5,6 +5,7 @@ require 'active_support/core_ext'
 module Zync
   autoload :Application,  'zync/application'
   autoload :Logger,       'zync/logger'
+  autoload :Logging,      'zync/logging'
   autoload :Router,       'zync/router'
   autoload :Util,         'zync/util'
 
