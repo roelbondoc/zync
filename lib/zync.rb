@@ -19,6 +19,11 @@ module Zync
     def config
       application && application.config
     end
+    
+    def logger
+      # Use synchronous Logger by default
+      @logger ||= ::Logger.new(File.join(Zync.root, 'log', "#{Zync.env}.log"))
+    end
 
     def root
       # application && application.config.root
