@@ -13,7 +13,7 @@ module Zync
       end
 
       def add(severity, message)
-        @db.collection(self.collection_name).insert(:text => message, :created_at => Time.now)
+        @db.collection(self.collection_name).insert(:severity => severity, :text => message, :created_at => Time.now)
       end
 
     end
