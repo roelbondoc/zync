@@ -24,4 +24,5 @@ Gem::Specification.new do |s|
   s.add_dependency("i18n")
 
   s.add_development_dependency("rspec", ["~> 2.1.0"])
+  s.add_development_dependency("thin")
 end
