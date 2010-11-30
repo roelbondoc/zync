@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.files        = Dir['README', 'VERSION', 'lib/**/*']
   s.require_path = 'lib'
 
+  s.add_dependency("zync-gen", [Zync::VERSION])
   s.add_dependency("eventmachine", ["~> 0.12.10"])
   s.add_dependency("em-synchrony", ["~> 0.2.0"])
   s.add_dependency("rack", ["~> 1.2.1"])

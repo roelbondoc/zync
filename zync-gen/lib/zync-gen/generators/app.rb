@@ -18,7 +18,8 @@ module Zync
 
         inside "config" do
           template "application.rb"
-          template "environment.rb"
+          template "boot.rb"
+          template "environment.rb"          
           empty_directory "environments"
           
           empty_directory "initializers"
