@@ -37,7 +37,8 @@ module Zync
     end
     
     def load_settings
-      Zync.settings = YAML.load(File.read("#{Zync.root}/config/settings.yml"))[Zync.env]
+      settings_file = YAML.load(File.read("#{Zync.root}/config/settings.yml"))
+      Zync.settings = (settings_file && settings_file[Zync.env]) || {}
       Zync.settings = Util.symbolize_keys(Zync.settings)
     end
     
