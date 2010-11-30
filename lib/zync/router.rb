@@ -52,31 +52,3 @@ module Zync
   end
 end
 
-
-
-__END__
-
-begin
-  require 'http_router'
-rescue LoadError => ex
-  STDERR.puts ex.message
-  STDERR.puts "Zync::Application depends on the HttpRouter library"
-  exit!
-end
-
-module Zync
-  class Router
-    
-    attr_reader :routes
-    
-    def initialize(&block)
-      @routes = HttpRouter.new(&block)
-    end
-    
-    def call(env)
-      @routes.call(env)
-    end
-    
-  end
-end
-
