@@ -23,7 +23,7 @@ module Zync
           empty_directory "environments"          
           empty_directory "initializers"                    
           template "routes.rb"
-          create_file 'settings.yml'
+          template 'settings.yml'
         end
       end
 
