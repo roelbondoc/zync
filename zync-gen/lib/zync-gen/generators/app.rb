@@ -20,15 +20,8 @@ module Zync
           template "application.rb"
           template "boot.rb"
           template "environment.rb"          
-          empty_directory "environments"
-          
-          empty_directory "initializers"
-          inside "initializers" do
-              %w( production development test ).each do |file|
-                create_file "#{file}.rb"
-              end
-          end
-          
+          empty_directory "environments"          
+          empty_directory "initializers"                    
           template "routes.rb"
           create_file 'settings.yml'
         end
