@@ -5,6 +5,7 @@ require 'active_support/core_ext'
 module Zync
   autoload :Application,  'zync/application'
   autoload :Logger,       'zync/logger'
+  autoload :Logging,      'zync/logging'
   autoload :Router,       'zync/router'
   autoload :Util,         'zync/util'
 
@@ -17,6 +18,11 @@ module Zync
 
     def config
       application && application.config
+    end
+    
+    def logger
+      # Use synchronous Logger by default
+      @logger ||= ::Logger.new(File.join(Zync.root, 'log', "#{Zync.env}.log"))
     end
 
     def root

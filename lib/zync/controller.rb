@@ -51,6 +51,13 @@ module Zync
     def params
       @params ||= request.params
     end
+    
+    protected
+    
+      def logger
+        Zync.logger
+      end
+      
   end
   
 end
