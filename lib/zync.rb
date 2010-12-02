@@ -18,7 +18,8 @@ module Zync
   end
 
   class << self
-    attr_accessor :application, :logger, :settings
+    attr_accessor :application, :settings
+    attr_writer :logger
 
     def config
       application && application.config
