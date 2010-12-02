@@ -13,6 +13,10 @@ module Zync
   autoload :Callbacks,    'zync/callbacks'
   autoload :Body,         'zync/body'
 
+  module Test
+    autoload :ControllerHelper, 'zync/test/controller_helper'
+  end
+
   class << self
     attr_accessor :application, :logger, :settings
 
