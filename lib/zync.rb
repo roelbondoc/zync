@@ -6,7 +6,7 @@ module Zync
   autoload :Application,  'zync/application'
   autoload :Logger,       'zync/logger'
   autoload :Logging,      'zync/logging'
-  autoload :Router,       'zync/router'
+  autoload :Routing,      'zync/routing'
   autoload :Util,         'zync/util'
 
   autoload :Controller,   'zync/controller'

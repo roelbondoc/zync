@@ -1,3 +1,3 @@
-ZyncExample::Application.router do
+ZyncExample::Application.routes.draw do
   match '/' => 'hello#index'
 end

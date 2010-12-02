@@ -28,12 +28,11 @@ module Zync
     end
     
     def call(env)
-      router.call(env)
+      routes.call(env)
     end
-    
-    def router(&block)
-      return @router if !block_given?
-      @router ||= Router.new(&block)
+
+    def routes
+      @routes ||= Zync::Routing::RouteSet.new
     end
     
     def load_settings
