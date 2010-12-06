@@ -4,6 +4,14 @@ module Zync
   module Routing
     class RouteSet
 
+      class Dispatcher
+
+        def initialize(args)
+
+        end
+
+      end
+
       attr_accessor :routes
 
       def initialize
@@ -18,10 +26,10 @@ module Zync
       def call(env)
         matched_route = nil
         self.routes.each do |route|
-          if route.path == env['REQUEST_PATH']            
+          if route.path == env['REQUEST_PATH']
             matched_route = route
             break
-          end            
+          end
         end
 
         endpoint = endpoint(matched_route.endpoint) if matched_route
@@ -61,7 +69,7 @@ module Zync
         end
 
         def not_found
-          proc {|env| [404, {'Content-Type' => 'text/plain'}, 'Not found'] }
+          proc {|env| [404, {'Content-Type' => 'text/plain'}, ['Not found']] }
         end
 
     end
