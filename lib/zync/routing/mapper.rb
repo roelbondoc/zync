@@ -10,6 +10,7 @@ module Zync
 
       def match(route, options={})
         @set.add_route Route.new(route.keys.first, route.values.first)
+        self
       end
 
     end

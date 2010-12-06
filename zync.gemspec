@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_dependency("eventmachine", ["~> 0.12.10"])
   s.add_dependency("em-synchrony", ["~> 0.2.0"])
   s.add_dependency("rack", ["~> 1.2.1"])
+  s.add_dependency("rack-mount", ["~> 0.6.13"])
   s.add_dependency("activesupport", ["~> 3.0.0"])
   s.add_dependency("i18n")
 

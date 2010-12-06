@@ -7,7 +7,7 @@ module Zync
       def initialize(path, endpoint)
         self.path = path
         self.endpoint = endpoint
-      end      
+      end
             
     end    
     
