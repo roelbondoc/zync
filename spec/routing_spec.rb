@@ -7,6 +7,7 @@ describe "Zync Routing" do
     Routes.draw do
       match '/sports', :to => 'sports#index'
       get '/team_stats(/:grouping)', :to => 'team_stats#index'
+      resources :players
     end
   end
 
@@ -18,14 +19,26 @@ describe "Zync Routing" do
     it "routes to explcit controller/action" do
       response = request.get('/sports')
       response.body.should == "sports#index"
-      
+
       request.get('/team_stats').body.should == "team_stats#index"
     end
-        
+
     it "accepts optional parameters" do
       response = request.get('/team_stats/year')
       response.body.should == "team_stats#index"
-    end        
+    end
+
+    context "Resourceful route" do
+
+      it "routes to index" do
+        request.get('/players') { |response| response.body.should == "players#index"}
+      end
+
+      it "routes to show" do
+        request.get('/players/100') { |response| response.body.should == "players#show"}
+      end
+
+    end
 
   end
 

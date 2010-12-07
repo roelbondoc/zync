@@ -124,8 +124,22 @@ module Zync
 
       end
 
-      include Base
+      module Resources
 
+        def resources(*args)
+          options = args.extract_options!
+          args.push(options)
+          resource = args.pop
+          get "/#{resource}", :to => "#{resource}#index"
+          get "/#{resource}/:id", :to => "#{resource}#show"
+          self
+        end
+
+      end
+
+      include Base
+      include Resources
+      
     end
   end
 end
