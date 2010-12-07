@@ -3,5 +3,7 @@ module Zync
     autoload :Mapper, 'zync/routing/mapper'
     autoload :Route,  'zync/routing/route'
     autoload :RouteSet, 'zync/routing/route_set'
+
+    SEPARATORS = %w( / . ? )
   end
 end

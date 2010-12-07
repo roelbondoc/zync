@@ -1,3 +1,3 @@
 ZyncExample::Application.routes.draw do
-  match '/' => 'hello#index'
+  match '/', :to => 'hello#index'
 end

@@ -48,8 +48,8 @@ module Zync
       @request ||= Rack::Request.new(@env)
     end
 
-    def params
-      @params ||= request.params
+    def params      
+      @params ||= (@env[Zync::Routing::RouteSet::PARAMETERS_KEY] || {}).merge(request.params)
     end
 
     protected

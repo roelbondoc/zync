@@ -5,27 +5,18 @@ describe "Zync Routing" do
   stub_controllers do |routes|
     Routes = routes
     Routes.draw do
-      match '/sports' => 'sports#index'
+      match '/sports', :to => 'sports#index'
     end
   end
 
-  # Rack Application
-  def app
-    Routes
-  end
+  let(:app) { Routes }
+  let(:request) { Rack::MockRequest.new(app) }
 
-  # Perform a Mock requeset
-  def get(path)
-    request = Rack::MockRequest.new(app)
-    yield request.get(path)
-  end
-
-  describe "match" do
+  describe "Route Matches" do
 
     it "routes to explcit controller/action" do
-      get '/sports' do |response|
-        response.body.should == "sports#index"
-      end
+      response = request.get('/sports')
+      response.body.should == "sports#index"
     end
 
   end
@@ -33,10 +24,9 @@ describe "Zync Routing" do
   context "Route does not exist" do
 
     it "returns a 404 response" do
-      get '/foobar' do |response|
-        response.status.should == 404
-        response.body.should == "Not found"
-      end
+      response = request.get('/foobar', {})
+      response.status.should == 404
+      response.body.should == "Not Found"
     end
 
   end

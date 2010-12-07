@@ -1,6 +1,7 @@
 require 'eventmachine'
 require 'rack'
 require 'active_support/core_ext'
+require 'active_support/dependencies'
 
 module Zync
   autoload :Application,  'zync/application'
