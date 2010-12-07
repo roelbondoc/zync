@@ -4,6 +4,8 @@ module Zync
 
       class Mapping
 
+        IGNORE_OPTIONS = [:to, :as, :via]
+
         def initialize(set, path, options)
           @set = set
           @options = options
@@ -16,7 +18,7 @@ module Zync
         end
 
         def conditions
-          { :path_info => @path , :request_method => 'GET'}
+          { :path_info => @path , :request_method => request_method}
         end
 
         private
@@ -45,7 +47,7 @@ module Zync
 
           def defaults
             @defaults ||= (@options[:defaults] || {}).tap do |defaults|
-              @options.each { |k, v| defaults[k] = v unless v.is_a?(Regexp) }
+              @options.each { |k, v| defaults[k] = v unless v.is_a?(Regexp) || IGNORE_OPTIONS.include?(k) }
             end
           end
 
@@ -75,6 +77,14 @@ module Zync
             end
           end
 
+          def request_method
+            if(@options[:via])
+              @options[:via].to_s.upcase
+            else
+              'GET'
+            end
+          end
+
           def segment_keys
             @segment_keys ||= Rack::Mount::RegexpWithNamedGroups.new(
               Rack::Mount::Strexp.compile(@path, {}, SEPARATORS)
@@ -101,6 +111,14 @@ module Zync
         def match(path, options={})
           mapping = Mapping.new(@set, path, options || {}).to_route
           @set.add_route(*mapping)
+          self
+        end
+
+        def get(*args)
+          options = args.extract_options!
+          options[:via] = :get
+          args.push(options)
+          match(*args)
           self
         end
 

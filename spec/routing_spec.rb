@@ -6,6 +6,7 @@ describe "Zync Routing" do
     Routes = routes
     Routes.draw do
       match '/sports', :to => 'sports#index'
+      get '/team_stats(/:grouping)', :to => 'team_stats#index'
     end
   end
 
@@ -17,7 +18,14 @@ describe "Zync Routing" do
     it "routes to explcit controller/action" do
       response = request.get('/sports')
       response.body.should == "sports#index"
+      
+      request.get('/team_stats').body.should == "team_stats#index"
     end
+        
+    it "accepts optional parameters" do
+      response = request.get('/team_stats/year')
+      response.body.should == "team_stats#index"
+    end        
 
   end
 
