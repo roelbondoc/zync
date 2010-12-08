@@ -13,6 +13,10 @@ describe "Zync Routing" do
         collection do
           get :current
         end
+        
+        member do
+          get :statistics
+        end
       end
       
     end
@@ -56,6 +60,15 @@ describe "Zync Routing" do
         
       end
       
+      context "member nested" do
+        
+        it "routes to a nested member" do
+          response = request.get('/seasons/123/statistics')
+          response.body.should == "seasons#statistics"
+        end
+        
+      end
+
     end
 
   end

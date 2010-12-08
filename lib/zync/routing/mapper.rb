@@ -101,8 +101,8 @@ module Zync
         Rack::Mount::Utils.normalize_path(path)
       end
 
-      module Base
-
+      module Base        
+        
         # @private
         def initialize(set)
           @set = set
@@ -128,23 +128,40 @@ module Zync
 
         class Resource
 
-          attr_reader :name, :options
+          attr_reader :name, :options, :scope
 
           def initialize(mapper, name, options={})
             @mapper = mapper
             @name = name.to_s
-            @options = options.merge!(:controller => @name)            
+            @scope = {}
+            @options = options.merge!(:controller => @name)
             yield self
-          end        
-          
-          def collection(&block)
-            block.call
           end
-          
+
+          def collection(&block)
+            with_scope :collection do
+              block.call
+            end
+          end
+
+          def member(&block)
+            with_scope :member do
+              block.call
+            end
+          end
+
+          def with_scope(type)
+            @scope[:type] = type
+            yield
+          ensure
+            @scope[:type] = nil
+          end
+
           def get(*args)
             options = args.extract_options!
-            action_name = args.pop            
-            @mapper.get "/#{self.name}/#{action_name}", options.merge(:to => action_name.to_sym).merge(self.options)
+            action_name = args.pop
+            path = @scope[:type] == :collection ? "/#{self.name}/#{action_name}" : "/#{self.name}/:id/#{action_name}"            
+            @mapper.get path, options.merge(:to => action_name.to_sym).merge(self.options)
           end
 
         end
@@ -156,10 +173,10 @@ module Zync
 
           Resource.new(self, resource_name, options) do |resource|
             resource.instance_exec(&block) if block_given?
-                        
+
             get "/#{resource.name}", {:to => :index}.merge(resource.options)
-            get "/#{resource.name}/:id", {:to => :show}.merge(resource.options)            
-            
+            get "/#{resource.name}/:id", {:to => :show}.merge(resource.options)
+
           end
           self
         end
