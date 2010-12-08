@@ -124,14 +124,15 @@ module Zync
 
       end
 
-      module Resources
+      module Resources      
 
         def resources(*args)
           options = args.extract_options!
           args.push(options)
-          resource = args.pop
-          get "/#{resource}", :to => "#{resource}#index"
-          get "/#{resource}/:id", :to => "#{resource}#show"
+          resource = args.shift.to_s
+                  
+          get("/#{resource}", :to => "#{resource}#index")
+          get("/#{resource}/:id", :to => "#{resource}#show")
           self
         end
 

@@ -8,6 +8,7 @@ describe "Zync Routing" do
       match '/sports', :to => 'sports#index'
       get '/team_stats(/:grouping)', :to => 'team_stats#index'
       resources :players
+      
     end
   end
 
@@ -31,11 +32,13 @@ describe "Zync Routing" do
     context "Resourceful route" do
 
       it "routes to index" do
-        request.get('/players') { |response| response.body.should == "players#index"}
+        response = request.get('/players')
+        response.body.should == "players#index"
       end
 
       it "routes to show" do
-        request.get('/players/100') { |response| response.body.should == "players#show"}
+        response = request.get('/players/100') 
+        response.body.should == "players#show"
       end
 
     end
