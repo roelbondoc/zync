@@ -124,15 +124,43 @@ module Zync
 
       end
 
-      module Resources      
+      module Resources
 
-        def resources(*args)
+        class Resource
+
+          attr_reader :name, :options
+
+          def initialize(mapper, name, options={})
+            @mapper = mapper
+            @name = name.to_s
+            @options = options.merge!(:controller => @name)            
+            yield self
+          end        
+          
+          def collection(&block)
+            block.call
+          end
+          
+          def get(*args)
+            options = args.extract_options!
+            action_name = args.pop            
+            @mapper.get "/#{self.name}/#{action_name}", options.merge(:to => action_name.to_sym).merge(self.options)
+          end
+
+        end
+
+        def resources(*args, &block)
           options = args.extract_options!
           args.push(options)
-          resource = args.shift.to_s
-                  
-          get("/#{resource}", :to => "#{resource}#index")
-          get("/#{resource}/:id", :to => "#{resource}#show")
+          resource_name = args.shift.to_s
+
+          Resource.new(self, resource_name, options) do |resource|
+            resource.instance_exec(&block) if block_given?
+                        
+            get "/#{resource.name}", {:to => :index}.merge(resource.options)
+            get "/#{resource.name}/:id", {:to => :show}.merge(resource.options)            
+            
+          end
           self
         end
 
@@ -140,7 +168,7 @@ module Zync
 
       include Base
       include Resources
-      
+
     end
   end
 end
