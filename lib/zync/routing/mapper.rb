@@ -166,8 +166,8 @@ module Zync
           Resource.new(self, resource_name, options) do |resource|
             resource.instance_exec(&block) if block_given?
 
-            get "/#{resource.name}", {:to => :index}.merge(resource.options)
-            get "/#{resource.name}/:id", {:to => :show}.merge(resource.options)
+            get "/#{resource.name}", {:to => :index}.merge!(resource.options)
+            get "/#{resource.name}/:id", {:to => :show}.merge!(resource.options)
 
           end
           self
