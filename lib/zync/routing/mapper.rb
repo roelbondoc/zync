@@ -14,7 +14,7 @@ module Zync
         end
 
         def to_route
-          [ app, conditions, defaults , @options[:as] ]
+          [ app, conditions, defaults ]
         end
 
         def conditions
@@ -30,15 +30,7 @@ module Zync
           def normalize_path(path)
             raise ArgumentError, "path is required" if path.blank?
             path = Mapper.normalize_path(path)
-
-            if @options[:format] == false
-              @options.delete(:format)
-              path
-            elsif path.include?(":format")
-              path
-            else
-              "#{path}(.:format)"
-            end
+            "#{path}(.:format)"
           end
 
           def normalize_options!

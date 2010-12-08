@@ -16,7 +16,7 @@ module Zync
           params[:action] ||= 'index' # Default action to index
 
           unless controller = controller(params)
-            return [404, {'X-Cascade' => 'pass'}, []]
+            return [404, {'X-Cascade' => 'pass'}, ["Not Found"]]
           end
 
           dispatch(controller, params[:action], env)
@@ -55,21 +55,21 @@ module Zync
         self.clear!
       end
 
-      def add_route(app, conditions = {}, defaults = {}, name = nil)
-        route = Zync::Routing::Route.new(app, conditions, defaults, name)
+      def add_route(app, conditions = {}, defaults = {})
+        route = Zync::Routing::Route.new(app, conditions, defaults)
         @set.add_route(*route)
         self.routes << route
         route
       end
 
       def call(env)
-        finalize!
+        freeze!
         @set.call(env)
       end
 
       # Clear all routes
       def clear!
-        @finalized = false
+        @routes_frozen = false
         routes.clear
         @set = ::Rack::Mount::RouteSet.new(
           :parameters_key => PARAMETERS_KEY,
@@ -84,10 +84,10 @@ module Zync
       
       private
 
-        # Finalize all routes
-        def finalize!
-          return if @finalized
-          @finalized = true
+        # Freeze all routes
+        def freeze!
+          return if @routes_frozen
+          @routes_frozen = true
           @set.freeze
         end
         

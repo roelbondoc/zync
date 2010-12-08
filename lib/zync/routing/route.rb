@@ -14,17 +14,12 @@ module Zync
       # A hash of values that always gets merged into the parameters hash
       attr_reader :defaults
 
-      # Symbol identifier for the route used with named route generations
-      attr_reader :name
-
-      def initialize(app, conditions, defaults, name)
+      def initialize(app, conditions, defaults)
         unless app.respond_to?(:call)
           raise ArgumentError, 'app must be a valid rack application and respond to call'
         end
 
         @app = app
-
-        @name = name ? name.to_sym : nil
 
         @defaults = (defaults || {}).freeze
 
@@ -33,16 +28,15 @@ module Zync
           conditions[:path_info] = ::Rack::Mount::Strexp.compile(path, {}, SEPARATORS)
         end
 
+        # Wrap regex expressions with named capture support
         @conditions = conditions.inject({}) { |h, (k, v)|
           h[k] = ::Rack::Mount::RegexpWithNamedGroups.new(v)
           h
-        }
-
-        @conditions.freeze
+        }.freeze
       end
 
       def to_a
-        [@app, @conditions, @defaults, @name]
+        [@app, @conditions, @defaults]
       end
 
     end
