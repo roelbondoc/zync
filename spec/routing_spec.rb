@@ -8,17 +8,23 @@ describe "Zync Routing" do
       match '/sports', :to => 'sports#index'
       get '/team_stats(/:grouping)', :to => 'team_stats#index'
       resources :players
-      
+
       resources :seasons do
         collection do
           get :current
         end
-        
+
         member do
           get :statistics
         end
       end
-      
+
+      resources :teams do
+        resources :players do
+          resources :splits
+        end        
+      end
+
     end
   end
 
@@ -47,24 +53,36 @@ describe "Zync Routing" do
       end
 
       it "routes to show" do
-        response = request.get('/players/100') 
+        response = request.get('/players/100')
         response.body.should == "players#show"
       end
 
       context "collection nested" do
-        
+
         it "creates a route for a nested collection" do
           response = request.get('/seasons/current')
           response.body.should == "seasons#current"
         end
-        
+
       end
-      
+
       context "member nested" do
-        
+
         it "routes to a nested member" do
           response = request.get('/seasons/123/statistics')
           response.body.should == "seasons#statistics"
+        end
+
+      end
+
+      context "Nested Resource" do
+
+        it "routes to a nested resource" do
+          response = request.get('/teams/1234/players/5678/splits')
+          response.body.should == "splits#index"
+          
+          response = request.get('/teams/1234/players/5678/splits/1')
+          response.body.should == "splits#show"
         end
         
       end

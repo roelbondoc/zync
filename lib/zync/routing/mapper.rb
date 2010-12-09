@@ -120,12 +120,13 @@ module Zync
 
         class Resource
 
-          attr_reader :name, :options, :scope
+          attr_reader :name, :options, :parent_resource, :scope
 
-          def initialize(mapper, name, options={})
+          def initialize(mapper, name, options={}, parent_resource = nil)
             @mapper = mapper
             @name = name.to_s
-            @scope = {}
+            @parent_resource = parent_resource
+            @scope = {}            
             @options = options.merge!(:controller => @name)
             yield self
           end
@@ -139,6 +140,25 @@ module Zync
           def member(&block)
             with_scope :member do
               block.call
+            end
+          end
+          
+          def resources(*args, &block)
+            options = args.extract_options!
+            args.push(options)
+            Resource.new(@mapper, args.shift.to_s, options, self) do |resource|
+              resource.instance_exec(&block) if block_given?
+              
+              parent = resource.parent_resource
+              path = ["/#{resource.name}"]
+              until parent.nil?
+                path.insert(0, "/#{parent.name}/:#{singular_resource_name(parent.name)}_id")
+                parent = parent.parent_resource
+              end
+              
+              path = path.join('')              
+              @mapper.get path, {:to => :index}.merge!(resource.options)
+              @mapper.get "#{path}/:id", {:to => :show}.merge!(resource.options)
             end
           end
 
@@ -155,6 +175,12 @@ module Zync
             path = @scope[:type] == :collection ? "/#{self.name}/#{action_name}" : "/#{self.name}/:id/#{action_name}"            
             @mapper.get path, options.merge(:to => action_name.to_sym).merge(self.options)
           end
+          
+          private
+          
+            def singular_resource_name(name)
+              name.chop
+            end
 
         end
 
