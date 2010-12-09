@@ -29,6 +29,10 @@ describe "Zync Routing" do
         match '/news', :to => 'news#index'
         
         resources :teams
+        
+        scope'(/seasons/:season_id)' do
+          resources :players
+        end
       end
 
     end
@@ -61,6 +65,21 @@ describe "Zync Routing" do
       it "prepends the scope to resources" do
         response = request.get('/nulayer/teams/123')
         response.body.should == "teams#show"
+      end
+
+      context "with a nested scope" do
+        
+        it "prepends the nested scope only to routes within the nested scope definition" do
+          response = request.get('/nulayer/players')
+          response.body.should == "players#index"
+          
+          response = request.get('/nulayer/seasons/123/players')
+          response.body.should == "players#index"
+          
+          response = request.get('/nulayer/seasons/123/players/456')
+          response.body.should == "players#show"
+        end
+        
       end
       
     end

@@ -29,9 +29,8 @@ module Zync
           end
 
           def normalize_path(path)
-            raise ArgumentError, "path is required" if path.blank?
-            path = "#{@scope[:prepend_path]}#{path}"          
-            path = Mapper.normalize_path(path)
+            raise ArgumentError, "path is required" if path.blank?     
+            path = Mapper.normalize_path(scoped_path(path))
             "#{path}(.:format)"
           end
 
@@ -77,6 +76,12 @@ module Zync
             else
               'GET'
             end
+          end
+
+          def scoped_path(path)
+            scoped_paths = @scope[:scoped_path] || []
+            scoped_path = scoped_paths.join('')
+            "#{scoped_path}#{path}"
           end
 
           def segment_keys
@@ -134,10 +139,11 @@ module Zync
         private
 
           def with_scope(scope)
-            @scope[:prepend_path] = scope
+            @scope[:scoped_path] ||= []
+            @scope[:scoped_path] << scope
             yield
           ensure
-            @scope[:prepend_path] = nil
+            @scope[:prepend_path] && @scope[:prepend_path].pop
           end
 
       end
