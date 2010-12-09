@@ -4,7 +4,7 @@ module Zync
 
       class Mapping
 
-        IGNORE_OPTIONS = [:to, :as, :via]
+        IGNORE_OPTIONS = [:to, :via]
 
         def initialize(set, path, scope={}, options)
           @set = set
