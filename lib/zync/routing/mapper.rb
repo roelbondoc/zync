@@ -6,8 +6,9 @@ module Zync
 
         IGNORE_OPTIONS = [:to, :as, :via]
 
-        def initialize(set, path, options)
+        def initialize(set, path, scope={}, options)
           @set = set
+          @scope = scope
           @options = options
           @path = normalize_path(path)
           normalize_options!
@@ -29,6 +30,7 @@ module Zync
 
           def normalize_path(path)
             raise ArgumentError, "path is required" if path.blank?
+            path = "#{@scope[:prepend_path]}#{path}"          
             path = Mapper.normalize_path(path)
             "#{path}(.:format)"
           end
@@ -93,15 +95,15 @@ module Zync
         Rack::Mount::Utils.normalize_path(path)
       end
 
-      module Base        
-        
+      module Base
+
         # @private
         def initialize(set)
           @set = set
         end
 
         def match(path, options={})
-          mapping = Mapping.new(@set, path, options || {}).to_route
+          mapping = Mapping.new(@set, path, @scope, options || {}).to_route
           @set.add_route(*mapping)
           self
         end
@@ -116,6 +118,30 @@ module Zync
 
       end
 
+      module Scoping
+
+        def initialize(*args)
+          @scope = {}
+          super
+        end
+
+        def scope(scoped_path, &block)
+          with_scope(scoped_path) do
+            block.call
+          end
+        end
+
+        private
+
+          def with_scope(scope)
+            @scope[:prepend_path] = scope
+            yield
+          ensure
+            @scope[:prepend_path] = nil
+          end
+
+      end
+
       module Resources
 
         class Resource
@@ -126,7 +152,7 @@ module Zync
             @mapper = mapper
             @name = name.to_s
             @parent_resource = parent_resource
-            @scope = {}            
+            @scope = {}
             @options = options.merge!(:controller => @name)
             yield self
           end
@@ -142,44 +168,46 @@ module Zync
               block.call
             end
           end
-          
+
           def resources(*args, &block)
             options = args.extract_options!
             args.push(options)
             Resource.new(@mapper, args.shift.to_s, options, self) do |resource|
               resource.instance_exec(&block) if block_given?
-              
+
               parent = resource.parent_resource
               path = ["/#{resource.name}"]
               until parent.nil?
                 path.insert(0, "/#{parent.name}/:#{singular_resource_name(parent.name)}_id")
                 parent = parent.parent_resource
               end
-              
-              path = path.join('')              
+
+              path = path.join('')
               @mapper.get path, {:to => :index}.merge!(resource.options)
               @mapper.get "#{path}/:id", {:to => :show}.merge!(resource.options)
             end
           end
 
-          def with_scope(type)
-            @scope[:type] = type
-            yield
-          ensure
-            @scope[:type] = nil
-          end
+
 
           def get(*args)
             options = args.extract_options!
             action_name = args.pop
-            path = @scope[:type] == :collection ? "/#{self.name}/#{action_name}" : "/#{self.name}/:id/#{action_name}"            
+            path = @scope[:type] == :collection ? "/#{self.name}/#{action_name}" : "/#{self.name}/:id/#{action_name}"
             @mapper.get path, options.merge(:to => action_name.to_sym).merge(self.options)
           end
-          
+
           private
-          
+
             def singular_resource_name(name)
               name.chop
+            end
+
+            def with_scope(type)
+              @scope[:type] = type
+              yield
+            ensure
+              @scope[:type] = nil
             end
 
         end
@@ -202,6 +230,7 @@ module Zync
       end
 
       include Base
+      include Scoping
       include Resources
 
     end

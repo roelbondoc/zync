@@ -24,6 +24,12 @@ describe "Zync Routing" do
           resources :splits
         end        
       end
+      
+      scope '/:league_slug' do
+        match '/news', :to => 'news#index'
+        
+        resources :teams
+      end
 
     end
   end
@@ -43,6 +49,20 @@ describe "Zync Routing" do
     it "accepts optional parameters" do
       response = request.get('/team_stats/year')
       response.body.should == "team_stats#index"
+    end
+
+    context "within a scope" do
+      
+      it "prepends the scope to the path" do
+        response = request.get('/nulayer/news')
+        response.body.should == "news#index"                
+      end
+      
+      it "prepends the scope to resources" do
+        response = request.get('/nulayer/teams/123')
+        response.body.should == "teams#show"
+      end
+      
     end
 
     context "Resourceful route" do
