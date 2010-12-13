@@ -1,10 +1,4 @@
-source 'http://rubygems.org'
-
-gem 'eventmachine'
-gem 'activesupport', '~> 3.0.3', :require => nil
-gem 'tzinfo'
-gem 'i18n'
+source :rubygems
 
 gem 'zync'
-
 gem 'thin'

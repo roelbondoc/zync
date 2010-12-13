@@ -1,3 +1,3 @@
-<%= app_const %>.router do
-  # match '/' => 'hello#index'
+<%= app_const %>.routes.draw do
+  # match '/', :to => 'hello#index'
 end
