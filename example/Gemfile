@@ -2,9 +2,8 @@ source 'http://rubygems.org'
 
 gem 'eventmachine'
 gem 'activesupport', '~> 3.0.3', :require => nil
-gem 'tzinfo'
 gem 'i18n'
 
-gem 'zync', :path => '../../'
+gem 'zync', :path => '../'
 
 gem 'thin'
