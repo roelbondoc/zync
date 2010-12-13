@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.summary     = "Lightweight asynchronous Ruby web framework"
   s.description = "Lightweight asynchronous Ruby web framework"
 
-  s.authors     = ["Peter Kieltyka"]
+  s.authors     = ["Peter Kieltyka", "Kevin Faustino"]
   s.email       = ["peter@nulayer.com"]
   s.homepage    = "http://github.com/nulayer/zync"
 

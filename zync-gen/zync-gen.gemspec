@@ -6,9 +6,9 @@ Gem::Specification.new do |s|
   s.name        = "zync-gen"
   s.version     = Zync::Generators::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Kevin Faustino"]
+  s.authors     = ["Peter Kieltyka", "Kevin Faustino"]
   s.email       = ["kevin.faustino@nulayer.com"]
-  s.homepage    = ""
+   s.homepage   = "http://github.com/nulayer/zync"
   s.summary     = %q{Generators for Zync}
   s.description = %q{A Collection of generators for the Zync Web Framework}
 
