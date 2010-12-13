@@ -2,8 +2,6 @@
 $:.push File.expand_path("../lib", __FILE__)
 require "zync/version"
 
-require File.expand_path('../lib/zync/version', __FILE__)
-
 Gem::Specification.new do |s|
   s.name        = 'zync'
   s.version     = Zync::VERSION
