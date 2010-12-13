@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
 
   s.add_dependency("zync-gen", [Zync::VERSION])
-  s.add_dependency("eventmachine", ["~> 0.12.10"])
+  s.add_dependency("eventmachine", ["~> 1.0.0.beta.2"])
   s.add_dependency("rack", ["~> 1.2.1"])
   s.add_dependency("rack-mount", ["~> 0.6.13"])
   s.add_dependency("activesupport", ["~> 3.0.3"])
