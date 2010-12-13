@@ -20,8 +20,6 @@ module Zync
     end
     
     def initialize!
-      # TODO: really clean this up and refactor
-      # What would Rails do?
       load_settings
       load_app
       self
@@ -67,9 +65,6 @@ module Zync
       def add_to_load_path(dir)
         $:.unshift(dir) if File.exists?(dir)
       end
-    
-    # class Configuration
-    # end
     
   end
   
