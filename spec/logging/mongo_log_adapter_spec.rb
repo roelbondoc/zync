@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Zync::Logging::MongoDBLogAdapter do
+describe Zync::Logging::MongoLogAdapter do
   include EM::SpecHelper
 
   let(:db) do
@@ -11,7 +11,7 @@ describe Zync::Logging::MongoDBLogAdapter do
 
   let(:collection) { db.collection('messages') }
 
-  subject { Zync::Logging::MongoDBLogAdapter.new(:db => db)}
+  subject { Zync::Logging::MongoLogAdapter.new(:db => db)}
 
 
   it "writes a log message to a mongo db" do

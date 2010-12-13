@@ -1,5 +1,5 @@
 module Zync
   module Logging    
-    autoload :MongoDBLogAdapter,  'zync/logging/mongodb_log_adapter'
+    autoload :MongoLogAdapter,  'zync/logging/mongo_log_adapter'
   end
 end

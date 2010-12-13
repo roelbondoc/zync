@@ -3,7 +3,7 @@ require 'em-synchrony'
 
 module Zync
   module Logging
-    class MongoDBLogAdapter
+    class MongoLogAdapter
 
       attr_accessor :collection_name
 

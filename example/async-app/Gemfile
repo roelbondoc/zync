@@ -1,0 +1,4 @@
+source :rubygems
+
+gem 'zync', :path => '../../'
+gem 'thin'
