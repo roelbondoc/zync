@@ -29,7 +29,7 @@ module Zync
           end
 
           def normalize_path(path)
-            raise ArgumentError, "path is required" if path.blank?     
+            raise ArgumentError, "path is required" if path.blank?
             path = Mapper.normalize_path(scoped_path(path))
             "#{path}(.:format)"
           end
@@ -194,13 +194,18 @@ module Zync
             end
           end
 
-
-
           def get(*args)
             options = args.extract_options!
             action_name = args.pop
             path = @scope[:type] == :collection ? "/#{self.name}/#{action_name}" : "/#{self.name}/:id/#{action_name}"
             @mapper.get path, options.merge(:to => action_name.to_sym).merge(self.options)
+          end
+
+          def match(*args)
+            options = args.extract_options!
+            path = args.pop
+            path = @scope[:type] == :member ? "/#{self.name}/:id#{path}" : "/#{self.name}#{path}" 
+            @mapper.match path, options.merge(self.options)
           end
 
           private

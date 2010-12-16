@@ -16,10 +16,12 @@ describe "Zync Routing" do
 
         member do
           get :statistics
+          match '/news', :to => "news#index"
         end
       end
 
-      resources :teams do
+      resources :teams do        
+        
         resources :players do
           resources :splits
         end        
@@ -95,7 +97,7 @@ describe "Zync Routing" do
         response = request.get('/players/100')
         response.body.should == "players#show"
       end
-
+      
       context "collection nested" do
 
         it "creates a route for a nested collection" do
@@ -110,6 +112,11 @@ describe "Zync Routing" do
         it "routes to a nested member" do
           response = request.get('/seasons/123/statistics')
           response.body.should == "seasons#statistics"
+        end
+        
+        it "routes via a match" do
+          response = request.get('/seasons/123/news')
+          response.body.should == "news#index"
         end
 
       end
