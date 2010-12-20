@@ -70,11 +70,13 @@ module Zync
       # Clear all routes
       def clear!
         @routes_frozen = false
-        routes.clear
+        routes.clear        
         @set = ::Rack::Mount::RouteSet.new(
           :parameters_key => PARAMETERS_KEY,
           :request_class  => request_class
         )
+        # Add Empty favicon to route set
+        @set.add_route(proc {|env| [200, {}, []] }, { :path_info => '/favicon.ico' }, {})
       end
 
       def draw(&block)
