@@ -121,6 +121,14 @@ module Zync
           self
         end
 
+        def post(*args)
+          options = args.extract_options!
+          options[:via] = :post
+          args.push(options)
+          match(*args)
+          self
+        end
+
       end
 
       module Scoping
@@ -201,10 +209,17 @@ module Zync
             @mapper.get path, options.merge(:to => action_name.to_sym).merge(self.options)
           end
 
+          def post(*args)
+            options = args.extract_options!
+            action_name = args.pop
+            path = @scope[:type] == :collection ? "/#{self.name}/#{action_name}" : "/#{self.name}/:id/#{action_name}"
+            @mapper.post path, options.merge(:to => action_name.to_sym).merge(self.options)
+          end
+
           def match(*args)
             options = args.extract_options!
             path = args.pop
-            path = @scope[:type] == :member ? "/#{self.name}/:id#{path}" : "/#{self.name}#{path}" 
+            path = @scope[:type] == :member ? "/#{self.name}/:id#{path}" : "/#{self.name}#{path}"
             @mapper.match path, options.merge(self.options)
           end
 
