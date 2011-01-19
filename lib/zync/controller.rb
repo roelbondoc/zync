@@ -33,7 +33,7 @@ module Zync
     end
 
     def respond_with
-      [200, {'Content-Type' => 'text/html'}]
+      [200, {'Content-Type' => 'application/json'}]
     end
 
     def render(data)
