@@ -114,20 +114,23 @@ module Zync
         end
 
         def get(*args)
-          options = args.extract_options!
-          options[:via] = :get
-          args.push(options)
-          match(*args)
+          match_method(:get, *args)
           self
         end
 
         def post(*args)
-          options = args.extract_options!
-          options[:via] = :post
-          args.push(options)
-          match(*args)
+          match_method(:post, *args)
           self
         end
+
+        private
+
+          def match_method(type, *args)
+            options = args.extract_options!
+            options[:via] = type
+            args.push(options)
+            match(*args)
+          end
 
       end
 
