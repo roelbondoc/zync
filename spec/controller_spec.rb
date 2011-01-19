@@ -17,7 +17,7 @@ describe Zync::Controller do
   it "returns correct headers" do
     get '/' do |status, headers, body|
       status.should == 200
-      headers["Content-Type"].should == "text/html"
+      headers["Content-Type"].should == "application/json"
       body.should be_kind_of(EM::Deferrable)
       stop
     end
