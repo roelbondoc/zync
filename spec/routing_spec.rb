@@ -26,6 +26,15 @@ describe "Zync Routing" do
 
         resources :players do
           resources :splits
+          
+          member do
+            get :player_totals
+          end
+          
+          collection do
+            get :totals
+          end
+          
         end
       end
 
@@ -53,12 +62,12 @@ describe "Zync Routing" do
 
       request.get('/team_stats').body.should == "team_stats#index"
     end
-    
+
     it "routes post requests" do
       get_response = request.get('/fetch')
       get_response.status.should == 404
       get_response.body.should == "Not Found"
-      
+
       post_response = request.post('/fetch')
       post_response.body.should == "api#fetch"
     end
@@ -140,6 +149,24 @@ describe "Zync Routing" do
 
           response = request.get('/teams/1234/players/5678/splits/1')
           response.body.should == "splits#show"
+        end
+
+        context "member nested" do
+
+          it "routes to the nested member of the nested resource" do
+            response = request.get('/teams/1234/players/5678/player_totals')
+            response.body.should == "players#player_totals"
+          end
+          
+        end
+
+        context "collection nested" do
+
+          it "routes to the nested member of the nested resource" do
+            response = request.get('/teams/1234/players/totals')
+            response.body.should == "players#totals"
+          end
+          
         end
 
       end

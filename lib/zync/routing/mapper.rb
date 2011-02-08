@@ -192,14 +192,7 @@ module Zync
             Resource.new(@mapper, args.shift.to_s, options, self) do |resource|
               resource.instance_exec(&block) if block_given?
 
-              parent = resource.parent_resource
-              path = ["/#{resource.name}"]
-              until parent.nil?
-                path.insert(0, "/#{parent.name}/:#{singular_resource_name(parent.name)}_id")
-                parent = parent.parent_resource
-              end
-
-              path = path.join('')
+              path = self.class.resource_path(resource)
               @mapper.get path, {:to => :index}.merge!(resource.options)
               @mapper.get "#{path}/:id", {:to => :show}.merge!(resource.options)
             end
@@ -208,29 +201,48 @@ module Zync
           def get(*args)
             options = args.extract_options!
             action_name = args.pop
-            path = @scope[:type] == :collection ? "/#{self.name}/#{action_name}" : "/#{self.name}/:id/#{action_name}"
+            resource_path = self.class.resource_path(self)
+            path = @scope[:type] == :collection ? "#{resource_path}/#{action_name}" : "#{resource_path}/:id/#{action_name}"
             @mapper.get path, options.merge(:to => action_name.to_sym).merge(self.options)
           end
 
           def post(*args)
             options = args.extract_options!
             action_name = args.pop
-            path = @scope[:type] == :collection ? "/#{self.name}/#{action_name}" : "/#{self.name}/:id/#{action_name}"
+            resource_path = self.class.resource_path(self)
+            path = @scope[:type] == :collection ? "#{resource_path}/#{action_name}" : "#{resource_path}/:id/#{action_name}"
             @mapper.post path, options.merge(:to => action_name.to_sym).merge(self.options)
           end
 
           def match(*args)
             options = args.extract_options!
-            path = args.pop
-            path = @scope[:type] == :member ? "/#{self.name}/:id#{path}" : "/#{self.name}#{path}"
+            match_path = args.pop
+
+            resource_path = self.class.resource_path(self)
+            path = @scope[:type] == :member ? "#{resource_path}/:id#{match_path}" : "#{resource_path}#{match_path}"
+
             @mapper.match path, options.merge(self.options)
           end
 
-          private
+          class << self
 
             def singular_resource_name(name)
               name.chop
             end
+
+            def resource_path(resource)
+              parent = resource.parent_resource
+              path = ["/#{resource.name}"]
+              until parent.nil?
+                path.insert(0, "/#{parent.name}/:#{singular_resource_name(parent.name)}_id")
+                parent = parent.parent_resource
+              end
+              path.join('')
+            end
+
+          end
+
+          private
 
             def with_scope(type)
               @scope[:type] = type
