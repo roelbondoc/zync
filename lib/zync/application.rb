@@ -3,6 +3,8 @@ require 'yaml'
 module Zync
 
   class Application
+    SETTINGS_FILE_PATH = "#{Zync.root}/config/settings.yml"
+
     class << self
       def instance
         Zync.application ||= new
@@ -10,6 +12,10 @@ module Zync
 
       def configure(&block)
         class_eval(&block)
+      end
+
+      def settings_file=(path)
+        SETTINGS_FILE_PATH.replace(path)
       end
 
       protected
@@ -34,7 +40,7 @@ module Zync
     end
 
     def load_settings
-      settings_file = YAML.load(File.read("#{Zync.root}/config/settings.yml"))
+      settings_file = YAML.load(File.read(SETTINGS_FILE_PATH))
       Zync.settings = (settings_file && settings_file[Zync.env]) || {}
       Zync.settings = Util.symbolize_keys(Zync.settings)
     end
