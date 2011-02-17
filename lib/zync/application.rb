@@ -10,8 +10,8 @@ module Zync
         Zync.application ||= new
       end
 
-      def configure(&block)
-        class_eval(&block)
+      def configure
+        yield(self)
       end
 
       def settings_file=(path)
