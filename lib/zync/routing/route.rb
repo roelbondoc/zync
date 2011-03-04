@@ -14,6 +14,9 @@ module Zync
       # A hash of values that always gets merged into the parameters hash
       attr_reader :defaults
 
+      # String value of the path
+      attr_reader :path
+
       def initialize(app, conditions, defaults)
         unless app.respond_to?(:call)
           raise ArgumentError, 'app must be a valid rack application and respond to call'
