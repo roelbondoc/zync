@@ -153,8 +153,6 @@ module Zync
             @scope[:scoped_path] ||= []
             @scope[:scoped_path] << scope
             yield
-          ensure
-            @scope[:prepend_path] && @scope[:prepend_path].pop
           end
 
       end
