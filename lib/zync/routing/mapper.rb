@@ -9,7 +9,7 @@ module Zync
         def initialize(set, path, scope={}, options)
           @set = set
           @scope = scope
-          @options = options
+          @options = options.merge(@scope[:options] || {})
           @path = normalize_path(path)
           normalize_options!
         end
@@ -141,15 +141,16 @@ module Zync
           super
         end
 
-        def scope(scoped_path, &block)
-          with_scope(scoped_path) do
+        def scope(scoped_path, options = {}, &block)
+          with_scope(scoped_path, options) do
             block.call
           end
         end
 
         private
 
-          def with_scope(scope)
+          def with_scope(scope, options)
+            @scope[:options] = options
             @scope[:scoped_path] ||= []
             @scope[:scoped_path] << scope
             yield
